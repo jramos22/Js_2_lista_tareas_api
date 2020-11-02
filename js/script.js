@@ -47,32 +47,29 @@ function addTask(nombreTarea, fechaTarea, completoTarea) {
 
 // taskStatus(): Actualiza el estado de una tarea.
 function taskStatus(id, complete) {
-  // Recorre la lista de tareas.
-  for (let i = 0; i < tareas.length; i++) {
-    // Cuando encuentra la tarea con el id correcto cambia su estado.
-    // eslint-disable-next-line no-underscore-dangle
-    if (tareas[i]._id === id) {
-      tareas[i].complete = complete;
-      break;
-    }
+  fetch(`https://js2-tareas-api.netlify.app/api/tareas/${id}?uid=20`, {
+    method: 'PUT',
+    body: JSON.stringify({ name: 'Tarea de prueba 1', complete: true, date: '2020-10-27' }),
+    headers: {
+      'content-type': 'application/json',
+    },
+  }).then((response) => response.json())
+    .then((data) => console.log(data));
+  if (tareas.id === id) {
+    tareas.completo = complete;
   }
-  // Guarda la lista de tareas en localStorage.
-  localStorage.setItem('tareas', JSON.stringify(tareas));
 }
 
 // deleteTask(): Borra una tarea.
 function deleteTask(id) {
-  // Recorre la lista de tareas.
-  for (let i = 0; i < tareas.length; i++) {
-    // Cuando encuentra la tarea con el id correcto la borra.
-    // eslint-disable-next-line no-underscore-dangle
-    if (tareas[i]._id === id) {
-      tareas.splice(i, 1);
-      break;
-    }
-  }
-  // Guarda la lista de tareas en localStorage.
-  localStorage.setItem('tareas', JSON.stringify(tareas));
+  const fetchDELETE = {
+    method: 'DELETE',
+  };
+  fetch(`https://js2-tareas-api.netlify.app/api/tareas/${id}?uid=20`, fetchDELETE)
+    .then((response) => response)
+    .then((data) => {
+      console.log(data);
+    });
 }
 
 //
@@ -112,13 +109,13 @@ function appendTaskDOM(tarea) {
   checkbox.addEventListener('click', (event) => {
     const complete = event.currentTarget.checked;
     const itemId = event.currentTarget.getAttribute('id');
-    const taskId = parseInt(itemId.substring, 10(6));
+    const taskId = parseInt(itemId.substring(6));
     taskStatus(taskId, complete);
   });
   // Evento para borrar tareas.
   buttonDelete.addEventListener('click', (event) => {
     const itemId = event.currentTarget.getAttribute('id');
-    const taskId = parseInt(itemId.substring, 10(7));
+    const taskId = parseInt(itemId.substring(6));
     deleteTask(taskId);
     // Borra la tarea en el DOM.
     event.currentTarget.parentNode.remove();
